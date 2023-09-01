@@ -7,7 +7,7 @@ def generate_mapping_from_json(json_file, mapping_file):
     """_summary_
     """
 
-    
+    # Use the file directly instead of opening it.
     data = json.load(json_file)
     results = {}
     header = ''
@@ -49,28 +49,31 @@ def generate_mapping_from_json(json_file, mapping_file):
                         header.append('NEW to Study Mapping')
 
     res = pd.DataFrame.from_dict(results, orient='index', columns=header)
+    # Return result
     return res.to_excel(f'{mapping_file}', index=None, header=True)
     
 
 
-# Header setup.
+# Web page header setup.
 st.title("eLwazi Phenotype Harmonisation Tool")
 st.subheader("Description")
 st.write("This tool was designed for the purposes of automating the transformation of data in a single dataset to fit the requirements for a harmonised dataset. It ingests two files: 	a .csv metadata mapping file a .csv dataset for transformation It generates a spreadsheet to facilitate the mapping of the dataset metadata to the harmonisation codebook. *")
 
-# Body
+# Web page body
 st.divider()
-mapping_file = st.file_uploader(".csv metadata mapping file",type=["csv","json"])
-original_dataset = st.file_uploader(".csv dataset for transformation",type=["csv","xlsx"])
+# Need a way to specify the path to the folder as well as the file name. st.file_uploader doesn't provide that functionality.
+filename = st.text_input(".csv dataset for transformation")
+# Temporarily accept csv and JSON, eventually drop JSON.
+mapping_file = st.file_uploader(".csv metadata mapping file", type=["csv", "json"])
 
-if mapping_file and original_dataset:
+if mapping_file and filename:
     if st.button("Harmonise"):
-        transformed_dataset = generate_mapping_from_json(mapping_file, os.path.join(os.getcwd(),"./data/cineca.minimal.json.xlsx"))
+        transformed_dataset = generate_mapping_from_json(mapping_file, os.path.join(os.getcwd(), "./bin/" + filename))
 
-        with open(os.path.join(os.getcwd(),"./data/cineca.minimal.json.xlsx"), "rb") as file:
+        with open(os.path.join(os.getcwd(), "./bin/" + filename), "rb") as file:
             btn = st.download_button(
                     label="Download data as xlsx",
                     data=file,
-                    file_name="cineca.minimal.json.xlsx",
+                    file_name=filename,
                     mime="application/vnd.ms-excel"
                 )
