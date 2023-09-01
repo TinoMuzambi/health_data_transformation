@@ -67,9 +67,11 @@ filename = st.text_input(".csv dataset for transformation")
 mapping_file = st.file_uploader(".csv metadata mapping file", type=["csv", "json"])
 
 if mapping_file and filename:
+    # When harmonise button is clicked, generate the mapping file and save it to the bin directory.
     if st.button("Harmonise"):
         transformed_dataset = generate_mapping_from_json(mapping_file, os.path.join(os.getcwd(), "./bin/" + filename))
 
+        # Download the file.
         with open(os.path.join(os.getcwd(), "./bin/" + filename), "rb") as file:
             btn = st.download_button(
                     label="Download data as xlsx",
