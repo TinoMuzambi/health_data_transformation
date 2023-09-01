@@ -63,7 +63,7 @@ st.write("This tool was designed for the purposes of automating the transformati
 # Web page body
 st.divider()
 # Need a way to specify the path to the folder as well as the file name. st.file_uploader doesn't provide that functionality.
-filename = st.text_input(".csv dataset for transformation")
+filename = st.text_input("Output file name")
 # Temporarily accept csv and JSON, eventually drop JSON.
 mapping_file = st.file_uploader(".csv metadata mapping file", type=["csv", "json"])
 
